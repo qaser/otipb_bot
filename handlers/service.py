@@ -35,6 +35,16 @@ class Report(StatesGroup):
     waiting_confirm = State()
 
 
+@router.message(Command('reset'))
+async def reset_handler(message: Message, state: FSMContext):
+    await message.delete()
+    await state.clear()
+    await message.answer(
+        'Текущее состояние бота сброшено',
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+
 @router.message(Command('report'))
 async def report(message: Message, state: FSMContext):
     await message.delete()
@@ -89,16 +99,6 @@ async def report_save(message: Message, state: FSMContext):
     else:
         await message.answer(ABORT_TEXT, reply_markup=ReplyKeyboardRemove())
         await state.clear()
-
-
-@router.message(Command('reset'))
-async def reset_handler(message: Message, state: FSMContext):
-    await message.delete()
-    await state.clear()
-    await message.answer(
-        'Текущее состояние бота сброшено',
-        reply_markup=ReplyKeyboardRemove()
-    )
 
 
 @router.message(Command('start'))
