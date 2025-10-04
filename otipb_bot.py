@@ -14,10 +14,9 @@ from handlers import service
 from utils.utils import report_error
 
 
-# MSG_TEXT = ('Прошу предоставить фотографии журналов и актов АПК в данную группу до 12:00. '
-#             'Для автоматического учёта отправленных сообщений прошу указывать службу '
-#             '(в виде контекста или отдельным сообщением).')
-MSG_TEXT = ('Тестовое сообщение')
+MSG_TEXT = ('Прошу предоставить фотографии журналов и актов АПК в данную группу до 12:00. '
+            'Для автоматического учёта отправленных сообщений прошу указывать службу '
+            '(в виде контекста или отдельным сообщением).')
 
 
 # @dp.message(F.content_type.in_({'text', 'video', 'photo', 'document'}))
@@ -34,7 +33,7 @@ MSG_TEXT = ('Тестовое сообщение')
 
 async def send_reminder():
     try:
-        await bot.send_message(chat_id=GROUP_ID, text=MSG_TEXT, disable_notification=True)
+        await bot.send_message(chat_id=GROUP_ID, text=MSG_TEXT)
     except Exception as e:
         await report_error(e)
 
@@ -63,9 +62,9 @@ async def main():
     scheduler.add_job(
         send_reminder,
         'cron',
-        day_of_week='sat',
-        hour=21,
-        minute=25,
+        day_of_week='mon',
+        hour=8,
+        minute=20,
         timezone='Asia/Yekaterinburg'
     )
     scheduler.start()
