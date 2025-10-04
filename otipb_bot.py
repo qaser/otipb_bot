@@ -65,9 +65,10 @@ async def main():
         'cron',
         day_of_week='sat',
         hour=21,
-        minute=10,
+        minute=25,
         timezone='Asia/Yekaterinburg'
     )
+    scheduler.start()
     dp.include_routers(service.router)
     await dp.start_polling(bot)
 
