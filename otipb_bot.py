@@ -18,17 +18,39 @@ MSG_TEXT = ('Прошу предоставить фотографии журна
             'Для автоматического учёта отправленных сообщений прошу указывать службу '
             '(в виде контекста или отдельным сообщением).')
 
+DEPARTMENTS = [
+    'АиМО КЦ-1',
+    'АиМО КЦ-2',
+    'АиМО КЦ-3',
+    'АиМО КЦ-4',
+    'АиМО КЦ-5',
+    'АиМО КЦ-6',
+    'АиМО КЦ-7,8',
+    'АиМО КЦ-9,10',
+    'АиМО ТМ',
+    'АиМО ВО',
+    'ГКС КЦ-1,4',
+    'ГКС КЦ-2,3',
+    'ГКС КС-5,6',
+    'ГКС КС-7,8',
+    'ГКС КС-9,10',
+    'ЭВС Участок ТОиР ОЭ КС',
+    'Служба связи',
+    'ВПО',
+    'СЗК',
+]
 
-# @dp.message(F.content_type.in_({'text', 'video', 'photo', 'document'}))
-# async def archive_messages(message: Message):
-#     chat = message.chat.id
-#     thread = message.message_thread_id
-#     if message.text:
-#         await bot.send_message(
-#             chat_id=MY_TELEGRAM_ID,
-#             text=f'{message.chat.id} {thread} принято',
-#             parse_mode='HTML'
-#         )
+
+@dp.message(F.content_type.in_({'text', 'video', 'photo', 'document'}))
+async def archive_messages(message: Message):
+    chat = message.chat.id
+    thread = message.message_thread_id
+    if message.text:
+        await bot.send_message(
+            chat_id=MY_TELEGRAM_ID,
+            text=f'{message.chat.id} {thread} принято',
+            parse_mode='HTML'
+        )
 
 
 async def send_reminder():
@@ -62,9 +84,9 @@ async def main():
     scheduler.add_job(
         send_reminder,
         'cron',
-        day_of_week='mon',
-        hour=8,
-        minute=20,
+        day_of_week='sun',
+        hour=17,
+        minute=51,
         timezone='Asia/Yekaterinburg'
     )
     scheduler.start()
