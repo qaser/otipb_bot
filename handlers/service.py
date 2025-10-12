@@ -2,7 +2,6 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile, Message, ReplyKeyboardRemove
-from utils.constants import INITIAL_TEXT
 from aiogram.fsm.context import FSMContext
 from config.telegram_config import MY_TELEGRAM_ID, CHIEF_ENGINEER_ID
 from config.bot_config import bot
@@ -104,11 +103,6 @@ async def report_save(message: Message, state: FSMContext):
 @router.message(Command('start'))
 async def start_handler(message: Message):
     await message.answer(START_TEXT)
-
-
-@router.message(Command('help'))
-async def help_handler(message: Message):
-    await message.answer(INITIAL_TEXT)
 
 
 @router.message(Command('log'))
