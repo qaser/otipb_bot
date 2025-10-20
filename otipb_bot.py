@@ -130,7 +130,7 @@ async def main():
         'cron',
         day_of_week='mon',
         hour=8,
-        minute=15,
+        minute=40,
         timezone='Asia/Yekaterinburg'
     )
     scheduler.start()

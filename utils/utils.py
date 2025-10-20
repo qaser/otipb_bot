@@ -85,6 +85,7 @@ class DepartmentDetector:
         patterns['Служба связи'] = re.compile(r'служб[аы]?\s*связи', re.IGNORECASE)
         patterns['ВПО'] = re.compile(r'впо', re.IGNORECASE)
         patterns['СЗК'] = re.compile(r'сзк', re.IGNORECASE)
+        patterns['ЛЭС'] = re.compile(r'лэс', re.IGNORECASE)
         return patterns
 
     def detect_department(self, text: str):
