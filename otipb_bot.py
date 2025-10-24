@@ -29,18 +29,27 @@ department_manager = DepartmentManager(buffer)
 async def handle_media_with_caption(message: Message, bot: Bot):
     """Обработка фото/документов с подписями"""
     text = message.caption or ""
+    # ⛔ Пропускаем служебные сообщения
+    if text.strip().startswith("!"):
+        return
+
     department = department_manager.detector.detect_department(text)
     if department and message.message_thread_id:
         level = get_level_by_thread_id(message.message_thread_id)
         if level:
             await department_manager.mark_department_reported(bot, department, level)
             await message.react([ReactionTypeEmoji(emoji='👍')])
+
 
 
 @dp.message(F.text & ~F.text.startswith("/"))
 async def handle_text_message(message: Message, bot: Bot):
-    """Обработка обычных текстов"""
+    """Обработка обычных текстовых сообщений"""
     text = message.text or ""
+    # ⛔ Пропускаем служебные сообщения
+    if text.strip().startswith("!"):
+        return
+
     department = department_manager.detector.detect_department(text)
     if department and message.message_thread_id:
         level = get_level_by_thread_id(message.message_thread_id)
@@ -48,36 +57,6 @@ async def handle_text_message(message: Message, bot: Bot):
             await department_manager.mark_department_reported(bot, department, level)
             await message.react([ReactionTypeEmoji(emoji='👍')])
 
-
-# ---------------------- СЛУЖЕБНЫЕ КОМАНДЫ ----------------------
-
-@dp.message(Command("status"))
-async def show_status(message: Message):
-    """Показывает текущие отчёты по уровням"""
-    reports = department_manager.buffer.find({'type': 'departments_list'})
-    text = "📊 Статус отчётности:\n\n"
-    for doc in reports:
-        reported = doc.get('reported_departments', [])
-        total = len(DEPARTMENTS)
-        done = len(reported)
-        missing = [d for d in DEPARTMENTS if d not in reported]
-        level = doc.get("level")
-        text += f"Уровень {level}: {done}/{total} служб\n"
-        if missing:
-            text += "❌ Не отчитались:\n" + "\n".join(missing[:5])
-            if len(missing) > 5:
-                text += "\n..."
-        text += "\n\n"
-    await message.answer(text.strip())
-
-
-@dp.message(Command("reset"))
-async def reset_reports(message: Message):
-    """Сбрасывает отчёты"""
-    department_manager.buffer.update_many({'type': 'departments_list'}, {'$set': {'reported_departments': []}})
-    await message.answer("🔄 Все отчёты сброшены.")
-    # Обновляем сообщения
-    await department_manager.refresh_all(bot)
 
 
 # ---------------------- НАПОМИНАНИЯ ----------------------
